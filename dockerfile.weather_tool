@@ -1,0 +1,34 @@
+# Use an official Python base image
+FROM python:3.12-slim
+
+# Copies the uv package manager (a fast Python package manager) from a separate image.
+COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
+
+# Installs required packages to fetch and install Node.js:
+# curl, gnupg: needed to securely fetch and trust the NodeSource installer.
+# Runs the NodeSource setup script for Node.js v18.
+# Installs nodejs (includes npm and npx
+
+RUN apt-get update && apt-get install -y curl git gnupg && \
+    curl -fsSL https://deb.nodesource.com/setup_18.x | bash - && \
+    apt-get install -y nodejs && \
+    apt-get clean && rm -rf /var/lib/apt/lists/*
+
+ADD 03_2_weather_tool/ /root/03_2_weather_tool/
+
+WORKDIR /root/03_2_weather_tool
+
+# Removes any existing .venv folder (possibly from local development) to avoid conflicts.
+# Runs uv sync --frozen:
+# Installs dependencies exactly as locked in uv.lock
+
+RUN rm -rf .venv && uv sync --frozen
+
+# Use uv to add mcp as a dependency, including optional cli extras.
+
+RUN pip install mcp[cli]
+RUN pip install -r requirements.txt
+
+# This is the default command that runs when the container starts.
+# Executes the mcp CLI with arguments dev main.py.
+CMD ["mcp", "dev", "main.py"]

@@ -1,0 +1,4 @@
+tweepy
+fastmcp
+google-genai
+google-generativeai

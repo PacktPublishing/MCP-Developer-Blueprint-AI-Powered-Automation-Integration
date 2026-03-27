@@ -1,0 +1,19 @@
+{
+    "mcpServers": {
+      "Twitter MCP Tool": {
+        "command": "uv",
+        "args": [
+          "run",
+          "--with",
+          "google-genai",
+          "--with",
+          "mcp[cli]",
+          "--with",
+          "tweepy",
+          "mcp",
+          "run",
+          "D:\\MCPServers\\edquest-mcp\\mcp_e2e\\06_twitter_server"
+        ]
+      }
+    }
+  }
